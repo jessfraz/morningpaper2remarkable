@@ -27,6 +27,32 @@ For installation instructions from binaries please visit the [Releases Page](htt
 $ go get github.com/jessfraz/morningpaper2remarkable
 ```
 
+#### Running with Docker
+
+**Authentication**
+
+```console
+$ touch ${HOME}/.rmapi
+
+$ docker run --rm -it \
+    --name morningpaper2remarkable \
+    -v "${HOME}/.rmapi:/home/user/.rmapi:rw" \
+    r.j3ss.co/morningpaper2remarkable --once
+
+# Enter your one time auth code.
+```
+
+**Run it in daemon mode with our auth code**
+
+```console
+# You need to have already authed and have a .rmapi api file for this to 
+# work in daemon mode.
+$ docker run -d --restart always \
+    --name morningpaper2remarkable \
+    -v "${HOME}/.rmapi:/home/user/.rmapi:ro" \
+    r.j3ss.co/morningpaper2remarkable --interval 20h
+```
+
 ## Usage
 
 ```console
