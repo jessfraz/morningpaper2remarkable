@@ -4,7 +4,7 @@
 [![GoDoc](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=for-the-badge)](https://godoc.org/github.com/jessfraz/morningpaper2remarkable)
 [![Github All Releases](https://img.shields.io/github/downloads/jessfraz/morningpaper2remarkable/total.svg?style=for-the-badge)](https://github.com/jessfraz/morningpaper2remarkable/releases)
 
-A bot to sync the morning paper to a remarkable tablet.
+A bot to sync the [morning paper](https://blog.acolyer.org/) to a remarkable tablet.
 
 This authenticates with your remarkable cloud account via the command line on
 start. I hope to eventually make it run on my remarkable and not have to deal
