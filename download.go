@@ -14,12 +14,22 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+func getFiles() error {
+	// Iterate over however many pages we want to display.
+	for i := 1; i <= maxPages; i++ {
+		if err := downloadFilesFromFeed(i); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // downloadFilesFromFeed parses the RSS feed for the morning paper and downloads the links for
 // papers.
-func downloadFilesFromFeed() error {
+func downloadFilesFromFeed(page int) error {
 	// Parse the feed.
 	fp := gofeed.NewParser()
-	feed, err := fp.ParseURL(morningPaperRSSFeedURL)
+	feed, err := fp.ParseURL(fmt.Sprintf(morningPaperRSSFeedURL, page))
 	if err != nil {
 		return fmt.Errorf("parsing the url %s failed: %v", morningPaperRSSFeedURL, err)
 	}

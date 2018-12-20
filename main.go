@@ -18,10 +18,13 @@ import (
 )
 
 const (
-	morningPaperRSSFeedURL = "https://blog.acolyer.org/feed/"
+	morningPaperRSSFeedURL = "https://blog.acolyer.org/feed/?paged=%d"
 
 	// Number of remarkable auth retries allowed.
 	rmAuthRetries = 5
+
+	// Number of pages to iterate over.
+	maxPages = 1
 )
 
 var (
@@ -111,13 +114,13 @@ func main() {
 
 		// If the user passed the once flag, just do the run once and exit.
 		if once {
-			return downloadFilesFromFeed()
+			return getFiles()
 		}
 
 		logrus.Infof("Starting bot to update every %s", interval)
 		for range ticker.C {
 			// Parse the RSS feed.
-			if err := downloadFilesFromFeed(); err != nil {
+			if err := getFiles(); err != nil {
 				return err
 			}
 		}
