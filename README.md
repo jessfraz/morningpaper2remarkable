@@ -10,10 +10,11 @@ This authenticates with your remarkable cloud account via the command line on
 start. I hope to eventually make it run on my remarkable and not have to deal
 with the cloud.
 
-* [Installation](README.md#installation)
-   * [Binaries](README.md#binaries)
-   * [Via Go](README.md#via-go)
-* [Usage](README.md#usage)
+**Table of Contents**
+
+<!-- toc -->
+
+<!-- tocstop -->
 
 ## Installation
 
