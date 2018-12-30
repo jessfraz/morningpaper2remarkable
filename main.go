@@ -22,9 +22,6 @@ const (
 
 	// Number of remarkable auth retries allowed.
 	rmAuthRetries = 5
-
-	// Number of pages to iterate over.
-	maxPages = 1
 )
 
 var (
@@ -33,6 +30,8 @@ var (
 
 	interval time.Duration
 	once     bool
+
+	maxPages int
 
 	rmCtx *api.ApiCtx
 )
@@ -55,6 +54,8 @@ func main() {
 
 	p.FlagSet.DurationVar(&interval, "interval", 18*time.Hour, "update interval (ex. 5ms, 10s, 1m, 3h)")
 	p.FlagSet.BoolVar(&once, "once", false, "run once and exit, do not run as a daemon")
+
+	p.FlagSet.IntVar(&maxPages, "pages", 1, "number of pages of papers to download")
 
 	// Set the before function.
 	p.Before = func(ctx context.Context) error {
