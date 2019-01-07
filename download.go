@@ -209,7 +209,7 @@ func tryToFindPDFLink(link string) (string, error) {
 
 			// Add the current url as a prefix if we don't have one.
 			if !strings.HasPrefix(downloadLink, "http") {
-				downloadLink = filepath.Join("https:/dl.acm.org", downloadLink)
+				downloadLink = filepath.Join("https://dl.acm.org", downloadLink)
 			}
 
 			// Return false to break.
