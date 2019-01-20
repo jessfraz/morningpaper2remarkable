@@ -56,7 +56,7 @@ $ docker run --rm -it \
 # work in daemon mode.
 $ docker run -d --restart always \
     --name morningpaper2remarkable \
-    -v "${HOME}/.rmapi:/home/user/.rmapi:ro" \
+    -v "${HOME}/.rmapi:/home/user/.rmapi:rw" \
     r.j3ss.co/morningpaper2remarkable --interval 20h
 ```
 
