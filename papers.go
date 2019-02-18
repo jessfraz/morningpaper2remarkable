@@ -53,5 +53,7 @@ var (
 		"https://www.usenix.org/conference/usenixsecurity18/presentation/scaife": "https://www.usenix.org/system/files/conference/usenixsecurity18/sec18-scaife.pdf",
 		// Artistic Styles paper.
 		"https://hal.inria.fr/hal-01802131v2/document": "https://arxiv.org/pdf/1805.11155.pdf",
+		// Vehicle routing problems paper.
+		"https://hal.inria.fr/hal-01224562/document": "https://hal.inria.fr/hal-01224562/document",
 	}
 )
