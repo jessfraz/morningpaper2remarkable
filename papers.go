@@ -55,5 +55,9 @@ var (
 		"https://hal.inria.fr/hal-01802131v2/document": "https://arxiv.org/pdf/1805.11155.pdf",
 		// Vehicle routing problems paper.
 		"https://hal.inria.fr/hal-01224562/document": "https://hal.inria.fr/hal-01224562/document",
+		// The data calculator paper.
+		"https://stratos.seas.harvard.edu/publications/data-calculator-data-structure-design-and-cost-synthesis-first-principles-and": "https://stratos.seas.harvard.edu/files/stratos/files/datacalculator.pdf",
+		// Design continums paper.
+		"https://stratos.seas.harvard.edu/publications/design-continuums-and-path-toward-self-designing-key-value-stores-know-and": "https://stratos.seas.harvard.edu/files/stratos/files/selfdesign.pdf",
 	}
 )

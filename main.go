@@ -24,7 +24,7 @@ const (
 	rmAuthRetries = 5
 
 	// Number of pages to iterate over.
-	maxPages = 1
+	maxPages = 3
 )
 
 var (
