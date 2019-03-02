@@ -59,5 +59,9 @@ var (
 		"https://stratos.seas.harvard.edu/publications/data-calculator-data-structure-design-and-cost-synthesis-first-principles-and": "https://stratos.seas.harvard.edu/files/stratos/files/datacalculator.pdf",
 		// Design continums paper.
 		"https://stratos.seas.harvard.edu/publications/design-continuums-and-path-toward-self-designing-key-value-stores-know-and": "https://stratos.seas.harvard.edu/files/stratos/files/selfdesign.pdf",
+		// Large scale GAN paper.
+		"https://openreview.net/pdf?id=B1xsqj09Fm": "https://arxiv.org/pdf/1809.11096.pdf",
+		// CORALS paper.
+		"https://dl.acm.org/citation.cfm?id=3290995": "https://s3-media3.fl.yelpcdn.com/assets/srv0/engineering_pages/f63a086ef2a3/assets/vendor/pdf/DSC_R09_CORALSWhoAreMyPotentialNewCustomers.pdf",
 	}
 )
