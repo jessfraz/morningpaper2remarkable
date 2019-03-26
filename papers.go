@@ -63,5 +63,13 @@ var (
 		"https://openreview.net/pdf?id=B1xsqj09Fm": "https://arxiv.org/pdf/1809.11096.pdf",
 		// CORALS paper.
 		"https://dl.acm.org/citation.cfm?id=3290995": "https://s3-media3.fl.yelpcdn.com/assets/srv0/engineering_pages/f63a086ef2a3/assets/vendor/pdf/DSC_R09_CORALSWhoAreMyPotentialNewCustomers.pdf",
+		// Slim OS paper.
+		"https://www.usenix.org/conference/nsdi19/presentation/zhuo": "https://www.usenix.org/system/files/nsdi19-zhuo.pdf",
+		// Datacenter topologies paper.
+		"https://www.usenix.org/conference/nsdi19/presentation/zhang": "https://www.usenix.org/system/files/nsdi19-zhang.pdf",
+		// Datacenter RPCs paper.
+		"https://www.usenix.org/conference/nsdi19/presentation/kalia": "https://www.usenix.org/system/files/nsdi19-kalia.pdf",
+		// CURP paper.
+		"https://www.usenix.org/conference/nsdi19/presentation/park": "https://www.usenix.org/system/files/nsdi19-park.pdf",
 	}
 )
