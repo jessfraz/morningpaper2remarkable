@@ -119,7 +119,7 @@ func downloadFilesFromFeed(page int) error {
 		}).Info("downloaded paper to file")
 
 		// Sync the file with remarkable cloud.
-		if err := syncFileWithRemarkableCloud(file, fmt.Sprintf("%s (%s)", item.Title, item.PublishedParsed.Format("2006-01-02"))); err != nil {
+		if err := rmAPI.SyncFileAndRename(file, fmt.Sprintf("%s (%s)", item.Title, item.PublishedParsed.Format("2006-01-02"))); err != nil {
 			return err
 		}
 
@@ -202,17 +202,8 @@ func tryToFindPDFLink(link string) (string, error) {
 		text := s.Text()
 
 		if text == "PDF" && strings.HasPrefix(link, "https://dl.acm.org") {
-			return false
-
-			// This is usually the case with ACM links.
-			downloadLink = href
-
-			// Add the current url as a prefix if we don't have one.
-			if !strings.HasPrefix(downloadLink, "http") {
-				downloadLink = filepath.Join("https:/dl.acm.org", downloadLink)
-			}
-
 			// Return false to break.
+			// Cannot download from ACM.
 			return false
 		}
 
