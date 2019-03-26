@@ -41,6 +41,11 @@ func main() {
 	p.GitCommit = version.GITCOMMIT
 	p.Version = version.VERSION
 
+	// Build the list of available commands.
+	p.Commands = []cli.Command{
+		&downloadCommand{},
+	}
+
 	// Setup the global flags.
 	p.FlagSet = flag.NewFlagSet("morningpaper2remarkable", flag.ExitOnError)
 	p.FlagSet.BoolVar(&debug, "d", false, "enable debug logging")
@@ -66,6 +71,10 @@ func main() {
 			return err
 		}
 
+		return nil
+	}
+
+	p.Action = func(ctx context.Context, args []string) error {
 		// Create the directory in remarkable cloud.
 		if err := rmAPI.Mkdir(dataDir); err != nil {
 			return err
@@ -75,10 +84,6 @@ func main() {
 			"dir": dataDir,
 		}).Info("successfully created directory in remarkable cloud")
 
-		return nil
-	}
-
-	p.Action = func(ctx context.Context, args []string) error {
 		// Create the directory if it does not exist.
 		if _, err := os.Stat(dataDir); os.IsNotExist(err) {
 			if err := os.MkdirAll(dataDir, 0755); err != nil {
