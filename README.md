@@ -79,3 +79,22 @@ Commands:
 
   version  Show the version information.
 ```
+
+### Hidden Command
+
+I use the bot on my server but sometimes I just want a way to get a paper from
+a URL to my remarkable from the command line.
+
+I added a hidden command for that `download`.
+
+You can use it like the following:
+
+```bash
+$ morningpaper2remarkable download http://nickm.com/trope_tank/10_PRINT_121114.pdf "10 PRINT"
+```
+
+This will download the PDF from the URL at `arg[0]` put it in a folder, default
+named `papers` and name the PDF in that folder `arg[1]`, which above is `"10
+PRINT"`.
+
+You can change the folder name with the `--dataDir` flag.
