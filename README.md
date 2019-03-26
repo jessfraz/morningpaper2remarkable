@@ -19,6 +19,7 @@ with the cloud.
     + [Via Go](#via-go)
     + [Running with Docker](#running-with-docker)
 - [Usage](#usage)
+  * [Hidden Command](#hidden-command)
 
 <!-- tocstop -->
 
