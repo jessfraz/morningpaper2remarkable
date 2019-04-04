@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -11,17 +10,17 @@ import (
 	"time"
 
 	"github.com/genuinetools/pkg/cli"
+	"github.com/jessfraz/morningpaper2remarkable/remarkable"
 	"github.com/jessfraz/morningpaper2remarkable/version"
-	"github.com/juruen/rmapi/api"
-	"github.com/juruen/rmapi/log"
 	"github.com/sirupsen/logrus"
 )
 
 const (
 	morningPaperRSSFeedURL = "https://blog.acolyer.org/feed/?paged=%d"
 
-	// Number of remarkable auth retries allowed.
-	rmAuthRetries = 5
+
+	// Number of pages to iterate over.
+	maxPages = 3
 )
 
 var (
@@ -30,10 +29,9 @@ var (
 
 	interval time.Duration
 	once     bool
-
 	maxPages int
 
-	rmCtx *api.ApiCtx
+	rmAPI remarkable.Remarkable
 )
 
 func main() {
@@ -44,6 +42,11 @@ func main() {
 	// Set the GitCommit and Version.
 	p.GitCommit = version.GITCOMMIT
 	p.Version = version.VERSION
+
+	// Build the list of available commands.
+	p.Commands = []cli.Command{
+		&downloadCommand{},
+	}
 
 	// Setup the global flags.
 	p.FlagSet = flag.NewFlagSet("morningpaper2remarkable", flag.ExitOnError)
@@ -66,21 +69,18 @@ func main() {
 
 		// Authenticate with remarkable cloud.
 		logrus.Info("authenticating with remarkable cloud")
-		log.InitLog()
-		for i := 0; i < rmAuthRetries; i++ {
-			rmCtx = api.CreateApiCtx(api.AuthHttpCtx())
-
-			if rmCtx.Filetree == nil && i < rmAuthRetries {
-				logrus.Info("retrying remarkable auth...")
-			}
+		var err error
+		rmAPI, err = remarkable.New()
+		if err != nil {
+			return err
 		}
 
-		if rmCtx.Filetree == nil {
-			return errors.New("failed to build remarkable documents tree")
-		}
+		return nil
+	}
 
+	p.Action = func(ctx context.Context, args []string) error {
 		// Create the directory in remarkable cloud.
-		if err := remarkableMkdir(dataDir); err != nil {
+		if err := rmAPI.Mkdir(dataDir); err != nil {
 			return err
 		}
 
@@ -88,10 +88,6 @@ func main() {
 			"dir": dataDir,
 		}).Info("successfully created directory in remarkable cloud")
 
-		return nil
-	}
-
-	p.Action = func(ctx context.Context, args []string) error {
 		// Create the directory if it does not exist.
 		if _, err := os.Stat(dataDir); os.IsNotExist(err) {
 			if err := os.MkdirAll(dataDir, 0755); err != nil {
