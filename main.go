@@ -18,6 +18,7 @@ import (
 const (
 	morningPaperRSSFeedURL = "https://blog.acolyer.org/feed/?paged=%d"
 
+
 	// Number of pages to iterate over.
 	maxPages = 3
 )
@@ -28,6 +29,7 @@ var (
 
 	interval time.Duration
 	once     bool
+	maxPages int
 
 	rmAPI remarkable.Remarkable
 )
@@ -55,6 +57,8 @@ func main() {
 
 	p.FlagSet.DurationVar(&interval, "interval", 18*time.Hour, "update interval (ex. 5ms, 10s, 1m, 3h)")
 	p.FlagSet.BoolVar(&once, "once", false, "run once and exit, do not run as a daemon")
+
+	p.FlagSet.IntVar(&maxPages, "pages", 1, "number of pages of papers to download")
 
 	// Set the before function.
 	p.Before = func(ctx context.Context) error {

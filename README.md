@@ -75,6 +75,7 @@ Flags:
   --dir        directory to store the downloaded papers in (default: morningpaper)
   --interval   update interval (ex. 5ms, 10s, 1m, 3h) (default: 18h)
   --once       run once and exit, do not run as a daemon (default: false)
+  --pages      number of pages of papers to download (default: 1)
 
 Commands:
 
