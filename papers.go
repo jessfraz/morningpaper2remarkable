@@ -71,5 +71,7 @@ var (
 		"https://www.usenix.org/conference/nsdi19/presentation/kalia": "https://www.usenix.org/system/files/nsdi19-kalia.pdf",
 		// CURP paper.
 		"https://www.usenix.org/conference/nsdi19/presentation/park": "https://www.usenix.org/system/files/nsdi19-park.pdf",
+		// How bad can it git?
+		"https://www.ndss-symposium.org/ndss-paper/how-bad-can-it-git-characterizing-secret-leakage-in-public-github-repositories/": "https://www.ndss-symposium.org/wp-content/uploads/2019/02/ndss2019_04B-3_Meli_paper.pdf",
 	}
 )
