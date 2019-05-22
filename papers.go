@@ -73,5 +73,9 @@ var (
 		"https://www.usenix.org/conference/nsdi19/presentation/park": "https://www.usenix.org/system/files/nsdi19-park.pdf",
 		// How bad can it git?
 		"https://www.ndss-symposium.org/ndss-paper/how-bad-can-it-git-characterizing-secret-leakage-in-public-github-repositories/": "https://www.ndss-symposium.org/wp-content/uploads/2019/02/ndss2019_04B-3_Meli_paper.pdf",
+		// Don't trust the locals paper.
+		"https://www.ndss-symposium.org/ndss-paper/dont-trust-the-locals-investigating-the-prevalence-of-persistent-client-side-cross-site-scripting-in-the-wild/": "https://www.ndss-symposium.org/wp-content/uploads/2019/02/ndss2019_01B-1_Steffens_paper.pdf",
+		// Master of web paper.
+		"https://www.ndss-symposium.org/ndss-paper/master-of-web-puppets-abusing-web-browsers-for-persistent-and-stealthy-computation/": "https://arxiv.org/pdf/1810.00464.pdf",
 	}
 )
