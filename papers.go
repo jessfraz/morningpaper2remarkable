@@ -77,5 +77,11 @@ var (
 		"https://www.ndss-symposium.org/ndss-paper/dont-trust-the-locals-investigating-the-prevalence-of-persistent-client-side-cross-site-scripting-in-the-wild/": "https://www.ndss-symposium.org/wp-content/uploads/2019/02/ndss2019_01B-1_Steffens_paper.pdf",
 		// Master of web paper.
 		"https://www.ndss-symposium.org/ndss-paper/master-of-web-puppets-abusing-web-browsers-for-persistent-and-stealthy-computation/": "https://arxiv.org/pdf/1810.00464.pdf",
+		// Far memory paper.
+		"https://dl.acm.org/citation.cfm?id=3304053": "https://docs.google.com/uc?export=download&id=1r6RVSbysPIIbFkhd-zoDEmE7kDJfroUR",
+		// Keeping masters green paper.
+		"https://dl.acm.org/citation.cfm?id=3303970": "https://docs.google.com/uc?export=download&id=12xNFXaQdY0htPYiZlG-4iXkEy_wclh2a",
+		// Amazon Aurora I/Os paper.
+		"https://dl.acm.org/citation.cfm?id=3183713.3196937": "https://docs.google.com/uc?export=download&id=1qAR8CmPSGQTmxU20FFA3xoGDR2JoN5XY",
 	}
 )
