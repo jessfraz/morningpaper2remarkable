@@ -63,7 +63,7 @@ func downloadFilesFromFeed(page int) error {
 			"link":  paperLink,
 		}).Debug("found paper link")
 
-		for !strings.HasSuffix(paperLink, ".pdf") && !strings.HasSuffix(paperLink, "/REF") && !strings.HasSuffix(paperLink, "/document") {
+		for !strings.HasSuffix(paperLink, ".pdf") && !strings.HasSuffix(paperLink, "/REF") && !strings.HasSuffix(paperLink, "/document") && !strings.HasPrefix(paperLink, "https://docs.google.com") {
 			// Handle arxiv papers.
 			if strings.HasPrefix(paperLink, "https://arxiv.org") {
 				// Get the pdf link for arxiv.org.
@@ -172,23 +172,21 @@ func getNameForPaperFile(title string, published *time.Time) string {
 }
 
 func tryToFindPDFLink(link string) (string, error) {
-	var downloadLink string
-
 	// Request the HTML page.
 	resp, err := http.Get(link)
 	if err != nil {
-		return downloadLink, fmt.Errorf("getting %s failed: %v", link, err)
+		return link, fmt.Errorf("getting %s failed: %v", link, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return downloadLink, fmt.Errorf("status code for getting %s error: %d %s", link, resp.StatusCode, resp.Status)
+		return link, fmt.Errorf("status code for getting %s error: %d %s", link, resp.StatusCode, resp.Status)
 	}
 
 	// Load the HTML document
 	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	if err != nil {
-		return downloadLink, fmt.Errorf("parsing link %s failed: %v", link, err)
+		return link, fmt.Errorf("parsing link %s failed: %v", link, err)
 	}
 
 	// Iterate over all the links.
@@ -207,7 +205,7 @@ func tryToFindPDFLink(link string) (string, error) {
 
 		// Found a link to a pdf.
 		if strings.HasPrefix(href, ".pdf") {
-			downloadLink = href
+			link = href
 
 			// Return false to break.
 			return false
@@ -216,5 +214,5 @@ func tryToFindPDFLink(link string) (string, error) {
 		return true
 	})
 
-	return downloadLink, nil
+	return link, nil
 }
