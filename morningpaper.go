@@ -63,7 +63,7 @@ func downloadFilesFromFeed(page int) error {
 			"link":  paperLink,
 		}).Debug("found paper link")
 
-		for !strings.HasSuffix(paperLink, ".pdf") && !strings.HasSuffix(paperLink, "/REF") && !strings.HasSuffix(paperLink, "/document") && !strings.HasPrefix(paperLink, "https://docs.google.com") {
+		for !strings.HasSuffix(paperLink, ".pdf") && !strings.HasSuffix(paperLink, "/REF") && !strings.HasSuffix(paperLink, "/document") {
 			// Handle arxiv papers.
 			if strings.HasPrefix(paperLink, "https://arxiv.org") {
 				// Get the pdf link for arxiv.org.
@@ -76,7 +76,7 @@ func downloadFilesFromFeed(page int) error {
 			pl, ok := knownPapersDownloadLinks[paperLink]
 			if ok {
 				paperLink = pl
-				continue
+				break
 			}
 
 			// Try to find the link on the next page.
