@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -17,6 +16,8 @@ import (
 
 const (
 	morningPaperRSSFeedURL = "https://blog.acolyer.org/feed/?paged=%d"
+
+	defaultDir = "morningpaper"
 )
 
 var (
@@ -49,7 +50,7 @@ func main() {
 	p.FlagSet.BoolVar(&debug, "d", false, "enable debug logging")
 	p.FlagSet.BoolVar(&debug, "debug", false, "enable debug logging")
 
-	p.FlagSet.StringVar(&dataDir, "dir", "morningpaper", "directory to store the downloaded papers in")
+	p.FlagSet.StringVar(&dataDir, "dir", defaultDir, "directory to store the downloaded papers in")
 
 	p.FlagSet.DurationVar(&interval, "interval", 18*time.Hour, "update interval (ex. 5ms, 10s, 1m, 3h)")
 	p.FlagSet.BoolVar(&once, "once", false, "run once and exit, do not run as a daemon")
@@ -75,20 +76,8 @@ func main() {
 	}
 
 	p.Action = func(ctx context.Context, args []string) error {
-		// Create the directory in remarkable cloud.
-		if err := rmAPI.Mkdir(dataDir); err != nil {
+		if err := createDirectory(dataDir); err != nil {
 			return err
-		}
-
-		logrus.WithFields(logrus.Fields{
-			"dir": dataDir,
-		}).Info("successfully created directory in remarkable cloud")
-
-		// Create the directory if it does not exist.
-		if _, err := os.Stat(dataDir); os.IsNotExist(err) {
-			if err := os.MkdirAll(dataDir, 0755); err != nil {
-				return fmt.Errorf("creating directory %s failed: %v", dataDir, err)
-			}
 		}
 
 		ticker := time.NewTicker(interval)

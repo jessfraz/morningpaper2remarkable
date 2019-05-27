@@ -5,7 +5,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"os"
 	"path/filepath"
 
 	"github.com/sirupsen/logrus"
@@ -20,11 +19,9 @@ func (cmd *downloadCommand) LongHelp() string  { return downloadHelp }
 func (cmd *downloadCommand) Hidden() bool      { return false }
 
 func (cmd *downloadCommand) Register(fs *flag.FlagSet) {
-	fs.StringVar(&cmd.dataDir, "dataDir", "papers", "directory to download the file to")
 }
 
 type downloadCommand struct {
-	dataDir string
 }
 
 func (cmd *downloadCommand) Run(ctx context.Context, args []string) error {
@@ -35,20 +32,13 @@ func (cmd *downloadCommand) Run(ctx context.Context, args []string) error {
 		return errors.New("must pass a title for the pdf")
 	}
 
-	// Create the directory in remarkable cloud.
-	if err := rmAPI.Mkdir(cmd.dataDir); err != nil {
-		return err
+	// We want the default dir for this command to be papers.
+	if dataDir == defaultDir {
+		dataDir = "papers"
 	}
 
-	logrus.WithFields(logrus.Fields{
-		"dir": cmd.dataDir,
-	}).Info("successfully created directory in remarkable cloud")
-
-	// Create the directory if it does not exist.
-	if _, err := os.Stat(cmd.dataDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(cmd.dataDir, 0755); err != nil {
-			return fmt.Errorf("creating directory %s failed: %v", cmd.dataDir, err)
-		}
+	if err := createDirectory(dataDir); err != nil {
+		return err
 	}
 
 	// Download the pdf.
@@ -56,7 +46,7 @@ func (cmd *downloadCommand) Run(ctx context.Context, args []string) error {
 		"link": args[0],
 	}).Debug("downloading paper")
 
-	file := filepath.Join(cmd.dataDir, args[1]+".pdf")
+	file := filepath.Join(dataDir, args[1]+".pdf")
 	if err := downloadPaper(args[0], file); err != nil {
 		return err
 	}
