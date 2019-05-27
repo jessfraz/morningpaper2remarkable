@@ -4,14 +4,14 @@ github.com/PuerkitoBio/goquery
 github.com/andybalholm/cascadia
 # github.com/genuinetools/pkg v0.0.0-20181022210355-2fcf164d37cb
 github.com/genuinetools/pkg/cli
-# github.com/juruen/rmapi v0.0.5-0.20181208194722-cbda5ccab439
+# github.com/juruen/rmapi v0.0.4
 github.com/juruen/rmapi/api
 github.com/juruen/rmapi/log
+github.com/juruen/rmapi/util
 github.com/juruen/rmapi/config
 github.com/juruen/rmapi/filetree
 github.com/juruen/rmapi/model
 github.com/juruen/rmapi/transport
-github.com/juruen/rmapi/util
 # github.com/konsorten/go-windows-terminal-sequences v1.0.1
 github.com/konsorten/go-windows-terminal-sequences
 # github.com/mmcdole/gofeed v1.0.0-beta2

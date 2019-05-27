@@ -6,8 +6,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/genuinetools/pkg v0.0.0-20181022210355-2fcf164d37cb h1:9MQ4N7zyYTtdjLGqE5McDbgjIjqR5TAPc6lytEOdndc=
 github.com/genuinetools/pkg v0.0.0-20181022210355-2fcf164d37cb/go.mod h1:XTcrCYlXPxnxL2UpnwuRn7tcaTn9HAhxFoFJucootk8=
-github.com/juruen/rmapi v0.0.5-0.20181208194722-cbda5ccab439 h1:wG+H23oSt44lV7Rz7QOpZYmASEZX6kgrpeZ5rMXPntI=
-github.com/juruen/rmapi v0.0.5-0.20181208194722-cbda5ccab439/go.mod h1:8k1Tl2a+p9aVRd4pWYZVhFEGN98RDhvpWYxS3iGoIxk=
+github.com/juruen/rmapi v0.0.4 h1:YwWg0mx3T27GOiteL8b2zzyLQnb9vm5MOiOin/qm8+0=
+github.com/juruen/rmapi v0.0.4/go.mod h1:8k1Tl2a+p9aVRd4pWYZVhFEGN98RDhvpWYxS3iGoIxk=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1 h1:mweAR1A6xJ3oS2pRaGiHgQ4OO8tzTaLawm8vnODuwDk=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
 github.com/mmcdole/gofeed v1.0.0-beta2 h1:CjQ0ADhAwNSb08zknAkGOEYqr8zfZKfrzgk9BxpWP2E=
