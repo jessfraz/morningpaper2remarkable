@@ -41,6 +41,11 @@ func downloadFilesFromFeed(page int) error {
 			continue
 		}
 
+		// Ignore End of Term
+		if strings.HasPrefix("end of term", strings.ToLower(item.Title)) {
+			continue
+		}
+
 		logrus.WithFields(logrus.Fields{
 			"title":     item.Title,
 			"published": item.PublishedParsed.String(),

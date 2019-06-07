@@ -52,11 +52,6 @@ func (r Remarkable) SyncFileAndRename(file, title string) error {
 		return errors.New("file and title cannot be empty")
 	}
 
-	// Ignore End of Term
-	if strings.HasPrefix("end of term", strings.ToLower(title)) {
-		return nil
-	}
-
 	// Get the node for the directory.
 	dir, err := r.api.Filetree.NodeByPath(filepath.Dir(file), r.api.Filetree.Root())
 	if err != nil || dir.IsFile() {
