@@ -4,9 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+	"strings"
 
 	"github.com/juruen/rmapi/api"
+	"github.com/juruen/rmapi/filetree"
 	"github.com/juruen/rmapi/log"
+	"github.com/juruen/rmapi/model"
 	"github.com/juruen/rmapi/util"
 	"github.com/sirupsen/logrus"
 )
@@ -49,6 +52,11 @@ func (r Remarkable) SyncFileAndRename(file, title string) error {
 		return errors.New("file and title cannot be empty")
 	}
 
+	// Ignore End of Term
+	if strings.HasPrefix("end of term", strings.ToLower(title)) {
+		return nil
+	}
+
 	// Get the node for the directory.
 	dir, err := r.api.Filetree.NodeByPath(filepath.Dir(file), r.api.Filetree.Root())
 	if err != nil || dir.IsFile() {
@@ -60,8 +68,25 @@ func (r Remarkable) SyncFileAndRename(file, title string) error {
 		"title": title,
 	}).Debug("uploading file to remarkable cloud")
 
-	if _, err := r.api.Filetree.NodeByPath(title, dir); err == nil {
+	if _, err = r.api.Filetree.NodeByPath(title, dir); err == nil {
 		// File already exists.
+		return nil
+	}
+
+	// Extra walk because sometimes the above does not catch it....
+	var found bool
+	filetree.WalkTree(dir, filetree.FileTreeVistor{
+		Visit: func(node *model.Node, path []string) bool {
+			entryName := filepath.Join(strings.Join(path, "/"), node.Name())
+
+			if strings.Contains(entryName, title) {
+				found = true
+			}
+
+			return found
+		},
+	})
+	if found {
 		return nil
 	}
 

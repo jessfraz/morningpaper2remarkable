@@ -121,7 +121,7 @@ func downloadFilesFromFeed(page int) error {
 		}).Info("downloaded paper to file")
 
 		// Sync the file with remarkable cloud.
-		if err := rmAPI.SyncFileAndRename(file, fmt.Sprintf("%s (%s)", item.Title, item.PublishedParsed.Format("2006-01-02"))); err != nil {
+		if err := rmAPI.SyncFileAndRename(file, fmt.Sprintf("%s (%s)", strings.TrimSpace(item.Title), item.PublishedParsed.Format("2006-01-02"))); err != nil {
 			return err
 		}
 
