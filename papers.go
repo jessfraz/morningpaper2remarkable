@@ -83,5 +83,7 @@ var (
 		"https://dl.acm.org/citation.cfm?id=3303970": "https://docs.google.com/uc?export=download&id=12xNFXaQdY0htPYiZlG-4iXkEy_wclh2a",
 		// Amazon Aurora I/Os paper.
 		"https://dl.acm.org/citation.cfm?id=3183713.3196937": "https://docs.google.com/uc?export=download&id=1qAR8CmPSGQTmxU20FFA3xoGDR2JoN5XY",
+		// Federated learning paper.
+		"https://ai.google/research/pubs/pub47976": "https://arxiv.org/pdf/1902.01046.pdf",
 	}
 )

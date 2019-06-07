@@ -95,15 +95,17 @@ func main() {
 		}()
 
 		// If the user passed the once flag, just do the run once and exit.
-		if once {
-			return getFiles()
+		if err := getFiles(); err != nil {
+			return err
 		}
 
-		logrus.Infof("Starting bot to update every %s", interval)
-		for range ticker.C {
-			// Parse the RSS feed.
-			if err := getFiles(); err != nil {
-				return err
+		if !once {
+			logrus.Infof("Starting bot to update every %s", interval)
+			for range ticker.C {
+				// Parse the RSS feed.
+				if err := getFiles(); err != nil {
+					return err
+				}
 			}
 		}
 
