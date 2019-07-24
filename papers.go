@@ -85,5 +85,17 @@ var (
 		"https://dl.acm.org/citation.cfm?id=3183713.3196937": "https://docs.google.com/uc?export=download&id=1qAR8CmPSGQTmxU20FFA3xoGDR2JoN5XY",
 		// Federated learning paper.
 		"https://ai.google/research/pubs/pub47976": "https://arxiv.org/pdf/1902.01046.pdf",
+		// Software engineering ML paper.
+		"https://www.microsoft.com/en-us/research/publication/software-engineering-for-machine-learning-a-case-study/": "https://www.microsoft.com/en-us/research/uploads/prod/2019/03/amershi-icse-2019_Software_Engineering_for_Machine_Learning.pdf",
+		// Trustworthy analysis paper.
+		"https://dl.acm.org/citation.cfm?id=3339916": "https://docs.google.com/uc?export=download&id=1ny3m9_l4bjxhenOpPBOdIw_Dr-DRHXCh",
+		// ML in a rut paper.
+		"https://dl.acm.org/citation.cfm?id=3321441": "https://docs.google.com/uc?export=download&id=1CynzINn9LAdIU7Kd0l_2RfRVmYx_h2dF",
+		// Fast KV stores paper.
+		"https://ai.google/research/pubs/pub48030": "https://storage.googleapis.com/pub-tools-public-publication-data/pdf/03de87e2856b06a94ffae7dca218db2d4b9afd39.pdf",
+		// Nines paper.
+		"https://ai.google/research/pubs/pub48033": "https://storage.googleapis.com/pub-tools-public-publication-data/pdf/f647d24ee7eeb338acebf1eb73a5d11b357620b0.pdf",
+		// Modelless paper.
+		"https://dl.acm.org/citation.cfm?id=3317550.3321443": "https://docs.google.com/uc?export=download&id=18txF-EcxWds13YiAfIJjNhTY2_33pNi8",
 	}
 )
