@@ -115,6 +115,16 @@ func downloadFilesFromFeed(page int) error {
 		// Use the item title here because Adrian uses better titles than
 		// what is usually in the link for the paper.
 		file := filepath.Join(dataDir, name)
+
+		if paperAlreadySynced(file) {
+			logrus.WithFields(logrus.Fields{
+				"paper": paper.Text(),
+				"link":  paperLink,
+			}).Info("skipping paper (already synced)")
+
+			continue
+		}
+
 		if err := downloadPaper(paperLink, file); err != nil {
 			return err
 		}
@@ -135,6 +145,12 @@ func downloadFilesFromFeed(page int) error {
 	}
 
 	return nil
+}
+
+func paperAlreadySynced(file string) bool {
+	// check if file exists
+	_, err := os.Stat(file)
+	return err == nil
 }
 
 func downloadPaper(link, file string) error {
