@@ -97,5 +97,27 @@ var (
 		"https://ai.google/research/pubs/pub48033": "https://storage.googleapis.com/pub-tools-public-publication-data/pdf/f647d24ee7eeb338acebf1eb73a5d11b357620b0.pdf",
 		// Modelless paper.
 		"https://dl.acm.org/citation.cfm?id=3317550.3321443": "https://docs.google.com/uc?export=download&id=18txF-EcxWds13YiAfIJjNhTY2_33pNi8",
+		// Ransomware paper.
+		"https://www.usenix.org/conference/soups2019/presentation/simoiu": "https://www.usenix.org/system/files/soups2019-simoiu.pdf",
+		// HackPPL paper.
+		"https://research.fb.com/publications/hackppl-a-universal-probabilistic-programming-language/": "https://research.fb.com/wp-content/uploads/2019/06/HackPPL-A-Universal-Probabilistic-Programming-Language.pdf?",
+		// Vega-Lite paper.
+		"https://idl.cs.washington.edu/papers/vega-lite/": "https://idl.cs.washington.edu/files/2017-VegaLite-InfoVis.pdf",
+		// Risk Scores paper.
+		"https://www.kdd.org/kdd2017/papers/view/optimized-risk-scores": "https://docs.google.com/uc?export=download&id=1UlgZTYFb5wnaycKWL0kF-Ew-PaoK_RHy",
+		// Linux operations paper.
+		"https://dl.acm.org/authorize.cfm?key=N695040": "https://docs.google.com/uc?export=download&id=1WtKHEElSSftsTHwRqbrMun0tZBu-M5mD",
+		// Ceph paper.
+		"https://dl.acm.org/authorize.cfm?key=N695037": "https://docs.google.com/uc?export=download&id=1d4o2hSSw3TLxeECM8SnMXS-rNFTyxMd7",
+		// Debugging paper.
+		"https://dl.acm.org/authorize.cfm?key=N695013": "https://docs.google.com/uc?export=download&id=1DiaBgnz1HLy-UjYMgzxR3I1r4wvFP-V-",
+		// Snap paper.
+		"https://ai.google/research/pubs/pub48630/": "https://storage.googleapis.com/pub-tools-public-publication-data/pdf/36f0f9b41e969a00d75da7693571e988996c9f4c.pdf",
+		// Serval paper.
+		"https://dl.acm.org/authorize?N695029": "https://docs.google.com/uc?export=download&id=1aEpFKHBDoKPTk59953oQx4TygjPg0vxO",
+		// Taiji paper.
+		"https://research.fb.com/publications/taiji-managing-global-user-traffic-for-large-scale-internet-services-at-the-edge/": "https://research.fb.com/wp-content/uploads/2019/09/Taiji-Managing-Global-User-Traffic-for-Large-Scale-Internet-Services-at-the-Edge.pdf?",
+		// How committees invent paper.
+		"http://www.melconway.com/Home/Committees_Paper.html": "http://www.melconway.com/Home/pdf/committees.pdf",
 	}
 )
