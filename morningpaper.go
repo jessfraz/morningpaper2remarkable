@@ -90,18 +90,18 @@ func downloadFilesFromFeed(page int) error {
 				return err
 			}
 
-			logrus.WithFields(logrus.Fields{
-				"title": item.Title,
-				"paper": paper.Text(),
-				"link":  paperLink,
-			}).Warn("could not find PDF to download")
-
 			// Bail.
 			break
 		}
 
 		if len(paperLink) < 1 {
 			// Maybe throw an error?
+			logrus.WithFields(logrus.Fields{
+				"title": item.Title,
+				"paper": paper.Text(),
+				"link":  paperLink,
+			}).Warn("could not find PDF to download")
+
 			continue
 		}
 
@@ -196,18 +196,18 @@ func tryToFindPDFLink(link string) (string, error) {
 	// Request the HTML page.
 	resp, err := http.Get(link)
 	if err != nil {
-		return link, fmt.Errorf("getting %s failed: %v", link, err)
+		return "", fmt.Errorf("getting %s failed: %v", link, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return link, fmt.Errorf("status code for getting %s error: %d %s", link, resp.StatusCode, resp.Status)
+		return "", fmt.Errorf("status code for getting %s error: %d %s", link, resp.StatusCode, resp.Status)
 	}
 
 	// Load the HTML document
 	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	if err != nil {
-		return link, fmt.Errorf("parsing link %s failed: %v", link, err)
+		return "", fmt.Errorf("parsing link %s failed: %v", link, err)
 	}
 
 	// Iterate over all the links.
@@ -235,5 +235,5 @@ func tryToFindPDFLink(link string) (string, error) {
 		return true
 	})
 
-	return link, nil
+	return "", nil
 }

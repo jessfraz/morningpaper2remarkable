@@ -119,5 +119,23 @@ var (
 		"https://research.fb.com/publications/taiji-managing-global-user-traffic-for-large-scale-internet-services-at-the-edge/": "https://research.fb.com/wp-content/uploads/2019/09/Taiji-Managing-Global-User-Traffic-for-Large-Scale-Internet-Services-at-the-Edge.pdf?",
 		// How committees invent paper.
 		"http://www.melconway.com/Home/Committees_Paper.html": "http://www.melconway.com/Home/pdf/committees.pdf",
+		// Secret sharer paper.
+		"https://www.usenix.org/conference/usenixsecurity19/presentation/carlini": "https://www.usenix.org/system/files/sec19-carlini.pdf",
+		// Data leak paper.
+		"https://www.usenix.org/conference/usenixsecurity19/presentation/reardon": "https://www.usenix.org/system/files/sec19-reardon.pdf",
+		// Wireless attacks paper.
+		"https://www.usenix.org/conference/usenixsecurity19/presentation/sathaye": "https://www.usenix.org/system/files/sec19-sathaye.pdf",
+		// Procella paper.
+		"https://ai.google/research/pubs/pub48388/": "https://storage.googleapis.com/pub-tools-public-publication-data/pdf/45a6cea2b9c101761ea1b51c961628093ec1d5da.pdf",
+		// Microsoft queries paper.
+		"https://www.microsoft.com/en-us/research/publication/experiences-with-approximating-queries-in-microsofts-production-big-data-clusters/": "https://www.microsoft.com/en-us/research/uploads/prod/2019/04/p698-kandula.pdf",
+		// NPM threats paper.
+		"https://www.usenix.org/conference/usenixsecurity19/presentation/zimmerman": "https://www.usenix.org/system/files/sec19-zimmermann.pdf",
+		// in-toto paper.
+		"https://www.usenix.org/conference/usenixsecurity19/presentation/torres-arias": "https://www.usenix.org/system/files/sec19-torres-arias.pdf",
+		// Phishing paper.
+		"https://www.usenix.org/conference/usenixsecurity19/presentation/ho": "https://www.usenix.org/system/files/sec19-ho.pdf",
+		// Booking.com ML paper.
+		"https://www.kdd.org/kdd2019/accepted-papers/view/150-successful-machine-learning-models-6-lessons-learned-at-booking.com": "https://docs.google.com/uc?export=download&id=13uOUTLW2FL3dwue_2i8Bl78Hu-hC7VND",
 	}
 )
