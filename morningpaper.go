@@ -46,6 +46,11 @@ func downloadFilesFromFeed(page int) error {
 			continue
 		}
 
+		// Ignore The Year Ahead
+		if strings.HasPrefix("the year ahead", strings.ToLower(item.Title)) {
+			continue
+		}
+
 		logrus.WithFields(logrus.Fields{
 			"title":     item.Title,
 			"published": item.PublishedParsed.String(),
