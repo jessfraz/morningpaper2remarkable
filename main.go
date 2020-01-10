@@ -65,21 +65,12 @@ func main() {
 		}
 
 		// Authenticate with remarkable cloud.
-		logrus.Info("authenticating with remarkable cloud")
-		var err error
-		rmAPI, err = remarkable.New()
-		if err != nil {
-			return err
-		}
+		rmAPI = remarkable.New()
 
 		return nil
 	}
 
 	p.Action = func(ctx context.Context, args []string) error {
-		if err := createDirectory(dataDir); err != nil {
-			return err
-		}
-
 		ticker := time.NewTicker(interval)
 
 		// On ^C, or SIGTERM handle exit.

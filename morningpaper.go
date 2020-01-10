@@ -2,12 +2,9 @@ package main
 
 import (
 	"fmt"
-	"io"
+	"io/ioutil"
 	"net/http"
-	"os"
-	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mmcdole/gofeed"
@@ -115,33 +112,18 @@ func downloadFilesFromFeed(page int) error {
 			"link": paperLink,
 		}).Debug("downloading paper")
 
-		// Create a name for the resulting file from the title.
-		name := getNameForPaperFile(item.Title, item.PublishedParsed)
-		// Use the item title here because Adrian uses better titles than
-		// what is usually in the link for the paper.
-		file := filepath.Join(dataDir, name)
-
-		if paperAlreadySynced(file) {
-			logrus.WithFields(logrus.Fields{
-				"paper": paper.Text(),
-				"link":  paperLink,
-			}).Info("skipping paper (already synced)")
-
-			continue
-		}
-
-		if err := downloadPaper(paperLink, file); err != nil {
+		file, err := downloadPaper(paperLink)
+		if err != nil {
 			return err
 		}
 
 		logrus.WithFields(logrus.Fields{
 			"paper": paper.Text(),
 			"link":  paperLink,
-			"file":  file,
-		}).Info("downloaded paper to file")
+		}).Info("downloaded paper")
 
 		// Sync the file with remarkable cloud.
-		if err := rmAPI.SyncFileAndRename(file, fmt.Sprintf("%s (%s)", strings.TrimSpace(item.Title), item.PublishedParsed.Format("2006-01-02"))); err != nil {
+		if err := rmAPI.SyncFileAndRename(dataDir, file, fmt.Sprintf("%s (%s)", strings.TrimSpace(item.Title), item.PublishedParsed.Format("2006-01-02"))); err != nil {
 			return err
 		}
 
@@ -152,49 +134,24 @@ func downloadFilesFromFeed(page int) error {
 	return nil
 }
 
-func paperAlreadySynced(file string) bool {
-	// check if file exists
-	_, err := os.Stat(file)
-	return err == nil
-}
-
-func downloadPaper(link, file string) error {
-	// Open the file.
-	f, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE, 0755)
-	if err != nil {
-		return fmt.Errorf("opening file %s failed: %v", file, err)
-	}
-	defer f.Close()
-
+func downloadPaper(link string) ([]byte, error) {
 	// Get the file contents.
 	resp, err := http.Get(link)
 	if err != nil {
-		return fmt.Errorf("getting %s failed: %v", link, err)
+		return nil, fmt.Errorf("getting %s failed: %v", link, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return fmt.Errorf("status code for getting %s error: %d %s", link, resp.StatusCode, resp.Status)
+		return nil, fmt.Errorf("status code for getting %s error: %d %s", link, resp.StatusCode, resp.Status)
 	}
 
-	// Copy the contents.
-	if _, err := io.Copy(f, resp.Body); err != nil {
-		return fmt.Errorf("writing file %s failed: %v", file, err)
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("reading body failed: %v", err)
 	}
 
-	return nil
-}
-
-func getNameForPaperFile(title string, published *time.Time) string {
-	parts := strings.Split(title, "http")
-	title = parts[0]
-
-	name := strings.Replace(strings.Replace(strings.ToLower(title), " ", "-", -1), ":", "", -1)
-
-	parts = strings.Split(name, "/")
-
-	// Return the last part.
-	return fmt.Sprintf("%s-%s.pdf", published.Format("2006-01-02"), parts[len(parts)-1])
+	return b, nil
 }
 
 func tryToFindPDFLink(link string) (string, error) {
