@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"path/filepath"
 
 	"github.com/sirupsen/logrus"
 )
@@ -36,25 +37,30 @@ func (cmd *downloadCommand) Run(ctx context.Context, args []string) error {
 		dataDir = "papers"
 	}
 
+	if err := createDirectory(dataDir); err != nil {
+		return err
+	}
+
 	// Download the pdf.
 	logrus.WithFields(logrus.Fields{
 		"link": args[0],
 	}).Debug("downloading paper")
 
-	file, err := downloadPaper(args[0])
-	if err != nil {
+	file := filepath.Join(dataDir, args[1]+".pdf")
+	if err := downloadPaper(args[0], file); err != nil {
 		return err
 	}
 
 	logrus.WithFields(logrus.Fields{
 		"link": args[0],
-	}).Info("downloaded paper")
+		"file": file,
+	}).Info("downloaded paper to file")
 
 	// Sync the file with remarkable cloud.
-	if err := rmAPI.SyncFileAndRename(dataDir, file, args[1]); err != nil {
+	if err := rmAPI.SyncFileAndRename(file, args[1]); err != nil {
 		return err
 	}
 
-	fmt.Printf("Downloaded %s and named %s", args[0], args[1])
+	fmt.Printf("Downloaded %s and renamed to %s", args[0], args[1])
 	return nil
 }
