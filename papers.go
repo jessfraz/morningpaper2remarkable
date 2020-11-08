@@ -137,5 +137,13 @@ var (
 		"https://www.usenix.org/conference/usenixsecurity19/presentation/ho": "https://www.usenix.org/system/files/sec19-ho.pdf",
 		// Booking.com ML paper.
 		"https://www.kdd.org/kdd2019/accepted-papers/view/150-successful-machine-learning-models-6-lessons-learned-at-booking.com": "https://docs.google.com/uc?export=download&id=13uOUTLW2FL3dwue_2i8Bl78Hu-hC7VND",
+		// The case for a learned sorting algorithm paper.
+		"https://dl.acm.org/doi/10.1145/3318464.3389752": "https://docs.google.com/uc?export=download&id=1oyVMjf92_D-Iu5bnUYkwgjc7nb5D8re8",
+		// Static analysis java paper.
+		"https://pldi20.sigplan.org/details/pldi-2020-papers/66/Static-Analysis-of-Java-Enterprise-Applications-Frameworks-and-Caches-the-Elephants": "https://yanniss.github.io/enterprise-pldi20.pdf",
+		// API for real numbers paper.
+		"https://dl.acm.org/doi/abs/10.1145/3385412.3386037": "https://docs.google.com/uc?export=download&id=1_aBmJfEG5injub5r_x_qWOJss6YKRKlP",
+		// Superhuman chess paper.
+		"https://dl.acm.org/doi/10.1145/3394486.3403219": "https://docs.google.com/uc?export=download&id=1Pe8fLGMhvlUk0TDqvoacUFykGnP2kAoM",
 	}
 )

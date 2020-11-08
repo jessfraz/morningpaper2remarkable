@@ -169,16 +169,23 @@ func downloadPaper(link, file string) error {
 	// Get the file contents.
 	resp, err := http.Get(link)
 	if err != nil {
+		f.Close()
+		os.Remove(file)
 		return fmt.Errorf("getting %s failed: %v", link, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
+		// Delete the file.
+		f.Close()
+		os.Remove(file)
 		return fmt.Errorf("status code for getting %s error: %d %s", link, resp.StatusCode, resp.Status)
 	}
 
 	// Copy the contents.
 	if _, err := io.Copy(f, resp.Body); err != nil {
+		f.Close()
+		os.Remove(file)
 		return fmt.Errorf("writing file %s failed: %v", file, err)
 	}
 
