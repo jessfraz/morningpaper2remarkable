@@ -15,13 +15,12 @@ with the cloud.
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [morningpaper2remarkable](#morningpaper2remarkable)
-  - [Installation](#installation)
-      - [Binaries](#binaries)
-      - [Via Go](#via-go)
-      - [Running with Docker](#running-with-docker)
-  - [Usage](#usage)
-    - [Hidden Command](#hidden-command)
+- [Installation](#installation)
+    - [Binaries](#binaries)
+    - [Via Go](#via-go)
+    - [Running with Docker](#running-with-docker)
+- [Usage](#usage)
+  - [Hidden Command](#hidden-command)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
