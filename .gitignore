@@ -50,6 +50,3 @@ coverage.txt
 profile.out
 
 !go.mod
-
-morningpaper
-papers

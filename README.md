@@ -1,6 +1,7 @@
 # morningpaper2remarkable
 
-[![Travis CI](https://img.shields.io/travis/jessfraz/morningpaper2remarkable.svg?style=for-the-badge)](https://travis-ci.org/jessfraz/morningpaper2remarkable)
+[![make-all](https://github.com/jessfraz/morningpaper2remarkable/workflows/make%20all/badge.svg)](https://github.com/jessfraz/morningpaper2remarkable/actions?query=workflow%3A%22make+all%22)
+[![make-image](https://github.com/jessfraz/morningpaper2remarkable/workflows/make%20image/badge.svg)](https://github.com/jessfraz/morningpaper2remarkable/actions?query=workflow%3A%22make+image%22)
 [![GoDoc](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=for-the-badge)](https://godoc.org/github.com/jessfraz/morningpaper2remarkable)
 [![Github All Releases](https://img.shields.io/github/downloads/jessfraz/morningpaper2remarkable/total.svg?style=for-the-badge)](https://github.com/jessfraz/morningpaper2remarkable/releases)
 
