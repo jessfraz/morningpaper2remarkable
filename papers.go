@@ -145,5 +145,9 @@ var (
 		"https://dl.acm.org/doi/abs/10.1145/3385412.3386037": "https://docs.google.com/uc?export=download&id=1_aBmJfEG5injub5r_x_qWOJss6YKRKlP",
 		// Superhuman chess paper.
 		"https://dl.acm.org/doi/10.1145/3394486.3403219": "https://docs.google.com/uc?export=download&id=1Pe8fLGMhvlUk0TDqvoacUFykGnP2kAoM",
+		// Delos paper.
+		"https://www.usenix.org/conference/osdi20/presentation/balakrishnan": "https://www.usenix.org/system/files/osdi20-balakrishnan.pdf",
+		// 100Gbps intrusion paper.
+		"https://www.usenix.org/conference/osdi20/presentation/zhao-zhipeng": "https://www.usenix.org/system/files/osdi20-zhao_zhipeng.pdf",
 	}
 )
