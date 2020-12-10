@@ -32,10 +32,11 @@ func New() (Remarkable, error) {
 	log.InitLog()
 
 	for i := 0; i < rmAuthRetries; i++ {
-		rm = api.CreateApiCtx(api.AuthHttpCtx())
+		var err error
+		rm, err = api.CreateApiCtx(api.AuthHttpCtx(false, false))
 
-		if rm.Filetree == nil && i < rmAuthRetries {
-			logrus.Debug("retrying remarkable auth...")
+		if (err != nil || rm.Filetree == nil) && i < rmAuthRetries {
+			logrus.WithField("error", err).Debug("retrying remarkable auth...")
 		}
 	}
 
@@ -99,7 +100,7 @@ func (r Remarkable) SyncFileAndRename(file, title string) error {
 	r.api.Filetree.AddDocument(*document)
 
 	// Move the file to the title.
-	docName := util.DocPathToName(filepath.Base(file))
+	docName, _ := util.DocPathToName(filepath.Base(file))
 	node, err := r.api.Filetree.NodeByPath(docName, dir)
 	if err != nil {
 		return fmt.Errorf("getting file %s failed: %v", file, err)
