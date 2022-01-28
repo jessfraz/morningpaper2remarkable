@@ -1,9 +1,9 @@
 # morningpaper2remarkable
 
-[![make-all](https://github.com/jessfraz/morningpaper2remarkable/workflows/make%20all/badge.svg)](https://github.com/jessfraz/morningpaper2remarkable/actions?query=workflow%3A%22make+all%22)
-[![make-image](https://github.com/jessfraz/morningpaper2remarkable/workflows/make%20image/badge.svg)](https://github.com/jessfraz/morningpaper2remarkable/actions?query=workflow%3A%22make+image%22)
-[![GoDoc](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=for-the-badge)](https://godoc.org/github.com/jessfraz/morningpaper2remarkable)
-[![Github All Releases](https://img.shields.io/github/downloads/jessfraz/morningpaper2remarkable/total.svg?style=for-the-badge)](https://github.com/jessfraz/morningpaper2remarkable/releases)
+[![make-all](https://github.com/pseudo-su/morningpaper2remarkable/workflows/make%20all/badge.svg)](https://github.com/pseudo-su/morningpaper2remarkable/actions?query=workflow%3A%22make+all%22)
+[![make-image](https://github.com/pseudo-su/morningpaper2remarkable/workflows/make%20image/badge.svg)](https://github.com/pseudo-su/morningpaper2remarkable/actions?query=workflow%3A%22make+image%22)
+[![GoDoc](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=for-the-badge)](https://godoc.org/github.com/pseudo-su/morningpaper2remarkable)
+[![Github All Releases](https://img.shields.io/github/downloads/pseudo-su/morningpaper2remarkable/total.svg?style=for-the-badge)](https://github.com/pseudo-su/morningpaper2remarkable/releases)
 
 A bot to sync the [morning paper](https://blog.acolyer.org/) to a remarkable tablet.
 
@@ -15,12 +15,13 @@ with the cloud.
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [Installation](#installation)
-    - [Binaries](#binaries)
-    - [Via Go](#via-go)
-    - [Running with Docker](#running-with-docker)
-- [Usage](#usage)
-  - [Hidden Command](#hidden-command)
+- [morningpaper2remarkable](#morningpaper2remarkable)
+  - [Installation](#installation)
+      - [Binaries](#binaries)
+      - [Via Go](#via-go)
+      - [Running with Docker](#running-with-docker)
+  - [Usage](#usage)
+    - [Hidden Command](#hidden-command)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -29,12 +30,12 @@ with the cloud.
 
 #### Binaries
 
-For installation instructions from binaries please visit the [Releases Page](https://github.com/jessfraz/morningpaper2remarkable/releases).
+For installation instructions from binaries please visit the [Releases Page](https://github.com/pseudo-su/morningpaper2remarkable/releases).
 
 #### Via Go
 
 ```console
-$ go get github.com/jessfraz/morningpaper2remarkable
+$ go get github.com/pseudo-su/morningpaper2remarkable
 ```
 
 #### Running with Docker

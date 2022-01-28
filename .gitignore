@@ -42,7 +42,7 @@ Icon
 .Spotlight-V100
 .Trashes
 
-morningpaper2remarkable
+/morningpaper2remarkable
 cross/
 
 # Go coverage results
@@ -52,3 +52,6 @@ profile.out
 !go.mod
 
 morningpaper
+
+/bin
+/build

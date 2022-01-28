@@ -1,5 +1,4 @@
 FROM golang:alpine as builder
-MAINTAINER Jessica Frazelle <jess@linux.com>
 
 ENV PATH /go/bin:/usr/local/go/bin:$PATH
 ENV GOPATH /go
@@ -8,7 +7,7 @@ RUN	apk add --no-cache \
 	bash \
 	ca-certificates
 
-COPY . /go/src/github.com/jessfraz/morningpaper2remarkable
+COPY . /go/src/github.com/pseudo-su/morningpaper2remarkable
 
 RUN set -x \
 	&& apk add --no-cache --virtual .build-deps \
@@ -17,7 +16,7 @@ RUN set -x \
 		libc-dev \
 		libgcc \
 		make \
-	&& cd /go/src/github.com/jessfraz/morningpaper2remarkable \
+	&& cd /go/src/github.com/pseudo-su/morningpaper2remarkable \
 	&& make static \
 	&& mv morningpaper2remarkable /usr/bin/morningpaper2remarkable \
 	&& apk del .build-deps \

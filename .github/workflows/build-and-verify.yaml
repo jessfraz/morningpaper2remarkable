@@ -1,0 +1,21 @@
+on: push
+name: build-and-verify
+jobs:
+  build-and-verify:
+    name: make all
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: Build
+        shell: bash
+        run:
+          make build
+
+      - name: Verify
+        shell: bash
+        run:
+          make verify
