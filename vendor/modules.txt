@@ -1,10 +1,14 @@
 # github.com/PuerkitoBio/goquery v1.5.0
+## explicit
 github.com/PuerkitoBio/goquery
 # github.com/andybalholm/cascadia v1.0.0
+## explicit
 github.com/andybalholm/cascadia
 # github.com/genuinetools/pkg v0.0.0-20181022210355-2fcf164d37cb
+## explicit
 github.com/genuinetools/pkg/cli
 # github.com/juruen/rmapi v0.0.8
+## explicit; go 1.12
 github.com/juruen/rmapi/api
 github.com/juruen/rmapi/config
 github.com/juruen/rmapi/filetree
@@ -13,33 +17,42 @@ github.com/juruen/rmapi/model
 github.com/juruen/rmapi/transport
 github.com/juruen/rmapi/util
 # github.com/konsorten/go-windows-terminal-sequences v1.0.1
+## explicit
 github.com/konsorten/go-windows-terminal-sequences
 # github.com/mmcdole/gofeed v1.0.0-beta2
+## explicit
 github.com/mmcdole/gofeed
 github.com/mmcdole/gofeed/atom
 github.com/mmcdole/gofeed/extensions
 github.com/mmcdole/gofeed/internal/shared
 github.com/mmcdole/gofeed/rss
 # github.com/mmcdole/goxpp v0.0.0-20181012175147-0068e33feabf
+## explicit
 github.com/mmcdole/goxpp
 # github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b
+## explicit
 github.com/satori/go.uuid
 # github.com/sirupsen/logrus v1.2.0
+## explicit
 github.com/sirupsen/logrus
-# golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
+# golang.org/x/crypto v0.51.0
+## explicit; go 1.25.0
 golang.org/x/crypto/ssh/terminal
-# golang.org/x/net v0.7.0
+# golang.org/x/net v0.55.0
+## explicit; go 1.25.0
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/html/charset
-# golang.org/x/sys v0.5.0
-golang.org/x/sys/internal/unsafeheader
+# golang.org/x/sys v0.45.0
+## explicit; go 1.25.0
 golang.org/x/sys/plan9
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/term v0.5.0
+# golang.org/x/term v0.43.0
+## explicit; go 1.25.0
 golang.org/x/term
-# golang.org/x/text v0.7.0
+# golang.org/x/text v0.37.0
+## explicit; go 1.25.0
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
 golang.org/x/text/encoding/htmlindex
@@ -58,4 +71,6 @@ golang.org/x/text/language
 golang.org/x/text/runes
 golang.org/x/text/transform
 # gopkg.in/yaml.v2 v2.2.2
+## explicit
 gopkg.in/yaml.v2
+# github.com/Sirupsen/logrus => github.com/sirupsen/logrus v1.2.0
