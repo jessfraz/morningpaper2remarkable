@@ -11,6 +11,7 @@ import (
 // A NodeType is the type of a Node.
 type NodeType uint32
 
+//go:generate stringer -type NodeType
 const (
 	ErrorNode NodeType = iota
 	TextNode
@@ -18,6 +19,11 @@ const (
 	ElementNode
 	CommentNode
 	DoctypeNode
+	// RawNode nodes are not returned by the parser, but can be part of the
+	// Node tree passed to func Render to insert raw HTML (without escaping).
+	// If so, this package makes no guarantee that the rendered HTML is secure
+	// (from e.g. Cross Site Scripting attacks) or well-formed.
+	RawNode
 	scopeMarkerNode
 )
 
@@ -32,6 +38,10 @@ var scopeMarker = Node{Type: scopeMarkerNode}
 // have a Namespace and contain a slice of Attributes. Data is unescaped, so
 // that it looks like "a<b" rather than "a&lt;b". For element nodes, DataAtom
 // is the atom for Data, or zero if Data is not a known tag name.
+//
+// Node trees may be navigated using the link fields (Parent,
+// FirstChild, and so on) or a range loop over iterators such as
+// [Node.Descendants].
 //
 // An empty Namespace implies a "http://www.w3.org/1999/xhtml" namespace.
 // Similarly, "math" is short for "http://www.w3.org/1998/Math/MathML", and
@@ -177,7 +187,7 @@ func (s *nodeStack) index(n *Node) int {
 // contains returns whether a is within s.
 func (s *nodeStack) contains(a atom.Atom) bool {
 	for _, n := range *s {
-		if n.DataAtom == a {
+		if n.DataAtom == a && n.Namespace == "" {
 			return true
 		}
 	}

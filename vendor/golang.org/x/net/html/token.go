@@ -110,9 +110,9 @@ func (t Token) String() string {
 	case SelfClosingTagToken:
 		return "<" + t.tagString() + "/>"
 	case CommentToken:
-		return "<!--" + t.Data + "-->"
+		return "<!--" + escapeCommentString(t.Data) + "-->"
 	case DoctypeToken:
-		return "<!DOCTYPE " + t.Data + ">"
+		return "<!DOCTYPE " + EscapeString(t.Data) + ">"
 	}
 	return "Invalid(" + strconv.Itoa(int(t.Type)) + ")"
 }
@@ -156,6 +156,7 @@ type Tokenizer struct {
 	// incremented on each call to TagAttr.
 	pendingAttr   [2]span
 	attr          [][2]span
+	attrNames     map[string]bool
 	nAttrReturned int
 	// rawTag is the "script" in "</script>" that closes the next token. If
 	// non-empty, the subsequent call to Next will return a raw or RCDATA text
@@ -296,8 +297,7 @@ func (z *Tokenizer) Buffered() []byte {
 // too many times in succession.
 func readAtLeastOneByte(r io.Reader, b []byte) (int, error) {
 	for i := 0; i < 100; i++ {
-		n, err := r.Read(b)
-		if n != 0 || err != nil {
+		if n, err := r.Read(b); n != 0 || err != nil {
 			return n, err
 		}
 	}
@@ -347,6 +347,7 @@ loop:
 			break loop
 		}
 		if c != '/' {
+			z.raw.end--
 			continue loop
 		}
 		if z.readRawEndTag() || z.err != nil {
@@ -598,6 +599,11 @@ scriptDataDoubleEscapeEnd:
 // readComment reads the next comment token starting with "<!--". The opening
 // "<!--" has already been consumed.
 func (z *Tokenizer) readComment() {
+	// When modifying this function, consider manually increasing the
+	// maxSuffixLen constant in func TestComments, from 6 to e.g. 9 or more.
+	// That increase should only be temporary, not committed, as it
+	// exponentially affects the test running time.
+
 	z.data.start = z.raw.end
 	defer func() {
 		if z.data.end < z.data.start {
@@ -605,14 +611,13 @@ func (z *Tokenizer) readComment() {
 			z.data.end = z.data.start
 		}
 	}()
-	for dashCount := 2; ; {
+
+	var dashCount int
+	beginning := true
+	for {
 		c := z.readByte()
 		if z.err != nil {
-			// Ignore up to two dashes at EOF.
-			if dashCount > 2 {
-				dashCount = 2
-			}
-			z.data.end = z.raw.end - dashCount
+			z.data.end = z.calculateAbruptCommentDataEnd()
 			return
 		}
 		switch c {
@@ -620,7 +625,7 @@ func (z *Tokenizer) readComment() {
 			dashCount++
 			continue
 		case '>':
-			if dashCount >= 2 {
+			if dashCount >= 2 || beginning {
 				z.data.end = z.raw.end - len("-->")
 				return
 			}
@@ -628,17 +633,50 @@ func (z *Tokenizer) readComment() {
 			if dashCount >= 2 {
 				c = z.readByte()
 				if z.err != nil {
-					z.data.end = z.raw.end
+					z.data.end = z.calculateAbruptCommentDataEnd()
 					return
-				}
-				if c == '>' {
+				} else if c == '>' {
 					z.data.end = z.raw.end - len("--!>")
 					return
+				} else if c == '-' {
+					dashCount = 1
+					beginning = false
+					continue
 				}
 			}
 		}
 		dashCount = 0
+		beginning = false
 	}
+}
+
+func (z *Tokenizer) calculateAbruptCommentDataEnd() int {
+	raw := z.Raw()
+	const prefixLen = len("<!--")
+	if len(raw) >= prefixLen {
+		raw = raw[prefixLen:]
+		if hasSuffix(raw, "--!") {
+			return z.raw.end - 3
+		} else if hasSuffix(raw, "--") {
+			return z.raw.end - 2
+		} else if hasSuffix(raw, "-") {
+			return z.raw.end - 1
+		}
+	}
+	return z.raw.end
+}
+
+func hasSuffix(b []byte, suffix string) bool {
+	if len(b) < len(suffix) {
+		return false
+	}
+	b = b[len(b)-len(suffix):]
+	for i := range b {
+		if b[i] != suffix[i] {
+			return false
+		}
+	}
+	return true
 }
 
 // readUntilCloseAngle reads until the next ">".
@@ -802,8 +840,22 @@ func (z *Tokenizer) readStartTag() TokenType {
 	if raw {
 		z.rawTag = strings.ToLower(string(z.buf[z.data.start:z.data.end]))
 	}
-	// Look for a self-closing token like "<br/>".
-	if z.err == nil && z.buf[z.raw.end-2] == '/' {
+	// Look for a self-closing token (e.g. <br/>).
+	//
+	// Originally, we did this by just checking that the last character of the
+	// tag (ignoring the closing bracket) was a solidus (/) character, but this
+	// is not always accurate.
+	//
+	// We need to be careful that we don't misinterpret a non-self-closing tag
+	// as self-closing, as can happen if the tag contains unquoted attribute
+	// values (i.e. <p a=/>).
+	//
+	// To avoid this, we check that the last non-bracket character of the tag
+	// (z.raw.end-2) isn't the same character as the last non-quote character of
+	// the last attribute of the tag (z.pendingAttr[1].end-1), if the tag has
+	// attributes.
+	nAttrs := len(z.attr)
+	if z.err == nil && z.buf[z.raw.end-2] == '/' && (nAttrs == 0 || z.raw.end-2 != z.attr[nAttrs-1][1].end-1) {
 		return SelfClosingTagToken
 	}
 	return StartTagToken
@@ -816,6 +868,7 @@ func (z *Tokenizer) readStartTag() TokenType {
 func (z *Tokenizer) readTag(saveAttr bool) {
 	z.attr = z.attr[:0]
 	z.nAttrReturned = 0
+	clear(z.attrNames)
 	// Read the tag name and attribute key/value pairs.
 	z.readTagName()
 	if z.skipWhiteSpace(); z.err != nil {
@@ -829,9 +882,11 @@ func (z *Tokenizer) readTag(saveAttr bool) {
 		z.raw.end--
 		z.readTagAttrKey()
 		z.readTagAttrVal()
-		// Save pendingAttr if saveAttr and that attribute has a non-empty key.
-		if saveAttr && z.pendingAttr[0].start != z.pendingAttr[0].end {
+		// Save pendingAttr if saveAttr and that attribute has a non-empty key, and the key hasn't been seen before.
+		key := strings.ToLower(string(z.buf[z.pendingAttr[0].start:z.pendingAttr[0].end]))
+		if saveAttr && z.pendingAttr[0].start != z.pendingAttr[0].end && !z.attrNames[key] {
 			z.attr = append(z.attr, z.pendingAttr)
+			z.attrNames[key] = true
 		}
 		if z.skipWhiteSpace(); z.err != nil {
 			break
@@ -873,10 +928,16 @@ func (z *Tokenizer) readTagAttrKey() {
 			return
 		}
 		switch c {
-		case ' ', '\n', '\r', '\t', '\f', '/':
-			z.pendingAttr[0].end = z.raw.end - 1
-			return
-		case '=', '>':
+		case '=':
+			if z.pendingAttr[0].start+1 == z.raw.end {
+				// WHATWG 13.2.5.32, if we see an equals sign before the attribute name
+				// begins, we treat it as a character in the attribute name and continue.
+				continue
+			}
+			fallthrough
+		case ' ', '\n', '\r', '\t', '\f', '/', '>':
+			// WHATWG 13.2.5.33 Attribute name state
+			// We need to reconsume the char in the after attribute name state to support the / character
 			z.raw.end--
 			z.pendingAttr[0].end = z.raw.end
 			return
@@ -893,6 +954,11 @@ func (z *Tokenizer) readTagAttrVal() {
 	}
 	c := z.readByte()
 	if z.err != nil {
+		return
+	}
+	if c == '/' {
+		// WHATWG 13.2.5.34 After attribute name state
+		// U+002F SOLIDUS (/) - Switch to the self-closing start tag state.
 		return
 	}
 	if c != '=' {
@@ -1067,6 +1133,11 @@ loop:
 
 // Raw returns the unmodified text of the current token. Calling Next, Token,
 // Text, TagName or TagAttr may change the contents of the returned slice.
+//
+// The token stream's raw bytes partition the byte stream (up until an
+// ErrorToken). There are no overlaps or gaps between two consecutive token's
+// raw bytes. One implication is that the byte offset of the current token is
+// the sum of the lengths of all previous tokens' raw bytes.
 func (z *Tokenizer) Raw() []byte {
 	return z.buf[z.raw.start:z.raw.end]
 }
@@ -1206,8 +1277,9 @@ func NewTokenizer(r io.Reader) *Tokenizer {
 // The input is assumed to be UTF-8 encoded.
 func NewTokenizerFragment(r io.Reader, contextTag string) *Tokenizer {
 	z := &Tokenizer{
-		r:   r,
-		buf: make([]byte, 0, 4096),
+		r:         r,
+		buf:       make([]byte, 0, 4096),
+		attrNames: make(map[string]bool),
 	}
 	if contextTag != "" {
 		switch s := strings.ToLower(contextTag); s {

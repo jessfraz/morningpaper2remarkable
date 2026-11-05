@@ -7,16 +7,25 @@
 package unix
 
 import (
+	"math/bits"
 	"unsafe"
 )
 
 const cpuSetSize = _CPU_SETSIZE / _NCPUBITS
 
-// CPUSet represents a CPU affinity mask.
+// CPUSet represents a bit mask of CPUs, to be used with [SchedGetaffinity], [SchedSetaffinity],
+// and [SetMemPolicy].
+//
+// Note this type can only represent CPU IDs 0 through 1023.
+// Use [CPUSetDynamic]/[NewCPUSet] instead to avoid this limit.
 type CPUSet [cpuSetSize]cpuMask
 
-func schedAffinity(trap uintptr, pid int, set *CPUSet) error {
-	_, _, e := RawSyscall(trap, uintptr(pid), uintptr(unsafe.Sizeof(*set)), uintptr(unsafe.Pointer(set)))
+// CPUSetDynamic represents a bit mask of CPUs, to be used with [SchedGetaffinityDynamic],
+// [SchedSetaffinityDynamic], and [SetMemPolicyDynamic]. Use [NewCPUSet] to allocate.
+type CPUSetDynamic []cpuMask
+
+func schedAffinity(trap uintptr, pid int, size uintptr, ptr unsafe.Pointer) error {
+	_, _, e := RawSyscall(trap, uintptr(pid), uintptr(size), uintptr(ptr))
 	if e != 0 {
 		return errnoErr(e)
 	}
@@ -26,20 +35,25 @@ func schedAffinity(trap uintptr, pid int, set *CPUSet) error {
 // SchedGetaffinity gets the CPU affinity mask of the thread specified by pid.
 // If pid is 0 the calling thread is used.
 func SchedGetaffinity(pid int, set *CPUSet) error {
-	return schedAffinity(SYS_SCHED_GETAFFINITY, pid, set)
+	return schedAffinity(SYS_SCHED_GETAFFINITY, pid, unsafe.Sizeof(*set), unsafe.Pointer(set))
 }
 
 // SchedSetaffinity sets the CPU affinity mask of the thread specified by pid.
 // If pid is 0 the calling thread is used.
 func SchedSetaffinity(pid int, set *CPUSet) error {
-	return schedAffinity(SYS_SCHED_SETAFFINITY, pid, set)
+	return schedAffinity(SYS_SCHED_SETAFFINITY, pid, unsafe.Sizeof(*set), unsafe.Pointer(set))
 }
 
 // Zero clears the set s, so that it contains no CPUs.
 func (s *CPUSet) Zero() {
-	for i := range s {
-		s[i] = 0
-	}
+	clear(s[:])
+}
+
+// Fill adds all possible CPU bits to the set s. On Linux, [SchedSetaffinity]
+// will silently ignore any invalid CPU bits in [CPUSet] so this is an
+// efficient way of resetting the CPU affinity of a process.
+func (s *CPUSet) Fill() {
+	cpuMaskFill(s[:])
 }
 
 func cpuBitsIndex(cpu int) int {
@@ -50,24 +64,27 @@ func cpuBitsMask(cpu int) cpuMask {
 	return cpuMask(1 << (uint(cpu) % _NCPUBITS))
 }
 
-// Set adds cpu to the set s.
-func (s *CPUSet) Set(cpu int) {
+func cpuMaskFill(s []cpuMask) {
+	for i := range s {
+		s[i] = ^cpuMask(0)
+	}
+}
+
+func cpuMaskSet(s []cpuMask, cpu int) {
 	i := cpuBitsIndex(cpu)
 	if i < len(s) {
 		s[i] |= cpuBitsMask(cpu)
 	}
 }
 
-// Clear removes cpu from the set s.
-func (s *CPUSet) Clear(cpu int) {
+func cpuMaskClear(s []cpuMask, cpu int) {
 	i := cpuBitsIndex(cpu)
 	if i < len(s) {
 		s[i] &^= cpuBitsMask(cpu)
 	}
 }
 
-// IsSet reports whether cpu is in the set s.
-func (s *CPUSet) IsSet(cpu int) bool {
+func cpuMaskIsSet(s []cpuMask, cpu int) bool {
 	i := cpuBitsIndex(cpu)
 	if i < len(s) {
 		return s[i]&cpuBitsMask(cpu) != 0
@@ -75,54 +92,98 @@ func (s *CPUSet) IsSet(cpu int) bool {
 	return false
 }
 
-// Count returns the number of CPUs in the set s.
-func (s *CPUSet) Count() int {
+func cpuMaskCount(s []cpuMask) int {
 	c := 0
 	for _, b := range s {
-		c += onesCount64(uint64(b))
+		c += bits.OnesCount64(uint64(b))
 	}
 	return c
 }
 
-// onesCount64 is a copy of Go 1.9's math/bits.OnesCount64.
-// Once this package can require Go 1.9, we can delete this
-// and update the caller to use bits.OnesCount64.
-func onesCount64(x uint64) int {
-	const m0 = 0x5555555555555555 // 01010101 ...
-	const m1 = 0x3333333333333333 // 00110011 ...
-	const m2 = 0x0f0f0f0f0f0f0f0f // 00001111 ...
+// Set adds cpu to the set s. If cpu is out of bounds for s, no action is taken.
+func (s *CPUSet) Set(cpu int) {
+	cpuMaskSet(s[:], cpu)
+}
 
-	// Unused in this function, but definitions preserved for
-	// documentation purposes:
-	//
-	//   const m3 = 0x00ff00ff00ff00ff // etc.
-	//   const m4 = 0x0000ffff0000ffff
-	//
-	// Implementation: Parallel summing of adjacent bits.
-	// See "Hacker's Delight", Chap. 5: Counting Bits.
-	// The following pattern shows the general approach:
-	//
-	//   x = x>>1&(m0&m) + x&(m0&m)
-	//   x = x>>2&(m1&m) + x&(m1&m)
-	//   x = x>>4&(m2&m) + x&(m2&m)
-	//   x = x>>8&(m3&m) + x&(m3&m)
-	//   x = x>>16&(m4&m) + x&(m4&m)
-	//   x = x>>32&(m5&m) + x&(m5&m)
-	//   return int(x)
-	//
-	// Masking (& operations) can be left away when there's no
-	// danger that a field's sum will carry over into the next
-	// field: Since the result cannot be > 64, 8 bits is enough
-	// and we can ignore the masks for the shifts by 8 and up.
-	// Per "Hacker's Delight", the first line can be simplified
-	// more, but it saves at best one instruction, so we leave
-	// it alone for clarity.
-	const m = 1<<64 - 1
-	x = x>>1&(m0&m) + x&(m0&m)
-	x = x>>2&(m1&m) + x&(m1&m)
-	x = (x>>4 + x) & (m2 & m)
-	x += x >> 8
-	x += x >> 16
-	x += x >> 32
-	return int(x) & (1<<7 - 1)
+// Clear removes cpu from the set s. If cpu is out of bounds for s, no action is taken.
+func (s *CPUSet) Clear(cpu int) {
+	cpuMaskClear(s[:], cpu)
+}
+
+// IsSet reports whether cpu is in the set s.
+func (s *CPUSet) IsSet(cpu int) bool {
+	return cpuMaskIsSet(s[:], cpu)
+}
+
+// Count returns the number of CPUs in the set s.
+func (s *CPUSet) Count() int {
+	return cpuMaskCount(s[:])
+}
+
+// NewCPUSet creates a CPU affinity mask capable of representing CPU IDs
+// up to maxCPU (exclusive).
+func NewCPUSet(maxCPU int) CPUSetDynamic {
+	numMasks := (maxCPU + _NCPUBITS - 1) / _NCPUBITS
+	if numMasks == 0 {
+		numMasks = 1
+	}
+	return make(CPUSetDynamic, numMasks)
+}
+
+// Zero clears the set s, so that it contains no CPUs.
+func (s CPUSetDynamic) Zero() {
+	clear(s)
+}
+
+// Fill adds all possible CPU bits to the set s. On Linux, [SchedSetaffinityDynamic]
+// will silently ignore any invalid CPU bits in [CPUSetDynamic] so this is an
+// efficient way of resetting the CPU affinity of a process.
+func (s CPUSetDynamic) Fill() {
+	cpuMaskFill(s)
+}
+
+// Set adds cpu to the set s. If cpu is out of bounds for s, no action is taken.
+func (s CPUSetDynamic) Set(cpu int) {
+	cpuMaskSet(s, cpu)
+}
+
+// Clear removes cpu from the set s. If cpu is out of bounds for s, no action is taken.
+func (s CPUSetDynamic) Clear(cpu int) {
+	cpuMaskClear(s, cpu)
+}
+
+// IsSet reports whether cpu is in the set s.
+func (s CPUSetDynamic) IsSet(cpu int) bool {
+	return cpuMaskIsSet(s, cpu)
+}
+
+// Count returns the number of CPUs in the set s.
+func (s CPUSetDynamic) Count() int {
+	return cpuMaskCount(s)
+}
+
+func (s CPUSetDynamic) size() uintptr {
+	return uintptr(len(s)) * unsafe.Sizeof(cpuMask(0))
+}
+
+func (s CPUSetDynamic) pointer() unsafe.Pointer {
+	if len(s) == 0 {
+		return nil
+	}
+	return unsafe.Pointer(&s[0])
+}
+
+// SchedGetaffinityDynamic gets the CPU affinity mask of the thread specified by pid.
+// If pid is 0 the calling thread is used.
+//
+// If the set is smaller than the size of the affinity mask used by the kernel,
+// [EINVAL] is returned.
+func SchedGetaffinityDynamic(pid int, set CPUSetDynamic) error {
+	return schedAffinity(SYS_SCHED_GETAFFINITY, pid, set.size(), set.pointer())
+}
+
+// SchedSetaffinityDynamic sets the CPU affinity mask of the thread specified by pid.
+// If pid is 0 the calling thread is used.
+func SchedSetaffinityDynamic(pid int, set CPUSetDynamic) error {
+	return schedAffinity(SYS_SCHED_SETAFFINITY, pid, set.size(), set.pointer())
 }
